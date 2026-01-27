@@ -1,0 +1,121 @@
+.my-properties-page {
+  padding: 20px;
+}
+
+.owner-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.owner-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.owner-card:hover {
+  transform: translateY(-4px);
+}
+
+/* IMAGE */
+.owner-image {
+  position: relative;
+  height: 200px;
+}
+
+.owner-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* STATUS */
+.status-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #22c55e;
+  color: white;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background: orange;
+}
+.status-badge.sold {
+  background: red;
+}
+
+/* ACTIONS */
+.owner-actions {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.owner-image:hover .owner-actions {
+  opacity: 1;
+}
+
+.owner-actions button {
+  background: white;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.owner-actions button:hover {
+  transform: scale(1.1);
+}
+
+.owner-actions .bi-trash {
+  color: red;
+}
+
+.owner-actions .bi-pencil {
+  color: #2563eb;
+}
+
+/* BODY */
+.owner-body {
+  padding: 16px;
+}
+
+.owner-body h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.location {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 6px 0;
+}
+
+.location i {
+  margin-right: 4px;
+}
+
+.owner-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+  color: #374151;
+}

@@ -1,0 +1,31 @@
+.owner-container {
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+.interest-card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.accept {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+}
+
+.reject {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+}

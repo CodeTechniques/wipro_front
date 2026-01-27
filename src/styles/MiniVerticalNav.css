@@ -1,0 +1,94 @@
+/* BOTTOM FLOATING HORIZONTAL NAV */
+.mini-vertical-nav {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;                 /* 🔥 horizontal */
+  flex-direction: row;           /* 🔥 force row */
+  align-items: center;
+  gap: 14px;
+
+  background: #ffffff;
+  padding: 12px 16px;
+  border-radius: 999px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  z-index: 9999;
+
+  height: auto;                  /* 🔥 remove vertical stretch */
+  width: fit-content;            /* 🔥 shrink to content */
+}
+
+/* ICON BUTTONS */
+.nav-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #94a3b8;
+  font-size: 18px;
+  text-decoration: none;
+
+  transition: all 0.25s ease;
+}
+
+/* ACTIVE ICON */
+.nav-icon.active {
+  background: #22c55e;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.35);
+}
+
+/* HOVER */
+.nav-icon:hover {
+  background: #f0fdf7;
+  color: #22c55e;
+}
+
+/* TOOLTIP (DESKTOP ONLY) */
+.nav-tooltip {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #111827;
+  color: #ffffff;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.nav-icon:hover .nav-tooltip {
+  opacity: 1;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 480px) {
+  .mini-vertical-nav {
+    bottom: 16px;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .nav-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .nav-tooltip {
+    display: none;
+  }
+}

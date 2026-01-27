@@ -1,0 +1,55 @@
+.property-row-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  position: relative;
+  transition: box-shadow 0.2s ease;
+}
+
+.property-row-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.row-image img {
+  width: 90px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.row-info {
+  flex: 1;
+  padding-left: 14px;
+}
+
+.row-meta span {
+  margin-right: 14px;
+  font-size: 14px;
+  color: #555;
+}
+
+.row-actions {
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.property-row-card:hover .row-actions {
+  opacity: 1;
+}
+
+.row-actions button {
+  background: #f5f5f5;
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.row-actions button:hover {
+  background: #eaeaea;
+}

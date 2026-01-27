@@ -1,0 +1,154 @@
+.footer {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  padding: 60px 20px 20px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: 40px;
+}
+
+/* BRAND */
+.footer-brand p {
+  margin: 16px 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo img {
+  width: 42px;
+}
+
+.brand-logo h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.social-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.social-icons a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111827;
+  transition: 0.2s;
+}
+
+.social-icons a:hover {
+  background: #16a34a;
+  color: #fff;
+}
+
+/* LINKS */
+.footer-links h4,
+.footer-connect h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.footer-links a {
+  display: block;
+  margin-bottom: 10px;
+  color: #374151;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer-links a:hover {
+  color: #16a34a;
+}
+
+/* CONNECT */
+.footer-connect {
+  background: #f0fdf4;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.connect-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+.connect-item i {
+  color: #16a34a;
+  font-size: 18px;
+}
+
+/* BOTTOM */
+.footer-bottom {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #6b7280;
+  flex-direction: column-reverse;
+}
+
+.back-to-top {
+  background: none;
+  border: none;
+  color: #16a34a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-to-top:hover {
+  text-decoration: underline;
+}
+
+
+footer a {
+  color: red;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

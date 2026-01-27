@@ -1,0 +1,12 @@
+.dashboard-layout {
+  display: flex;
+  padding-top: 90px; /* navbar height */
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 20px 40px;
+  margin-left: 90px; /* space for sidebar */
+  min-height: calc(100vh - 90px);
+  background: #f8fafc;
+}

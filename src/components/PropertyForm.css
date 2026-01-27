@@ -1,0 +1,90 @@
+.property-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.05);
+}
+
+.form-card h3 {
+  margin-bottom: 16px;
+}
+
+.property-form label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.property-form input,
+.property-form textarea,
+.property-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.feature-tile {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+}
+
+.feature-tile input {
+  display: none;
+}
+
+.feature-tile.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.submit-btn {
+  background: #2563eb;
+  color: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}

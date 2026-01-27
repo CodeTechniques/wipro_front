@@ -1,0 +1,89 @@
+.list-property-page {
+  padding: 30px;
+  background: #f6faf8;
+  min-height: 100vh;
+}
+
+.list-property-card {
+  max-width: 1100px;
+  margin: auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.list-property-card h2 {
+  font-size: 28px;
+}
+
+.list-property-card h2 span {
+  color: #0aa06e;
+}
+
+.subtitle {
+  color: #7a8b8b;
+  margin-bottom: 30px;
+}
+
+.list-property-form {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.photo-box {
+  border: 2px dashed #a6e3c4;
+  border-radius: 20px;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-area {
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-area span {
+  font-size: 42px;
+  color: #0aa06e;
+}
+
+.upload-area p {
+  font-weight: 600;
+  color: #0aa06e;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.form-grid textarea {
+  grid-column: span 2;
+  min-height: 120px;
+}
+
+input,
+textarea {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #e3e7e6;
+  font-size: 14px;
+}
+
+.submit-btn {
+  grid-column: span 2;
+  margin-top: 30px;
+  background: #0aa06e;
+  color: white;
+  border: none;
+  padding: 16px;
+  font-size: 15px;
+  border-radius: 30px;
+  cursor: pointer;
+}

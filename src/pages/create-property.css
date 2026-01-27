@@ -1,0 +1,28 @@
+.create-property {
+  max-width: 700px;
+  margin: 30px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.create-property input,
+.create-property textarea,
+.create-property select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+.create-property label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+button {
+  padding: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  width: 100%;
+}

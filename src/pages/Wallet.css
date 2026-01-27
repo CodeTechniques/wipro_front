@@ -1,0 +1,147 @@
+.wallet-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 20px;
+  font-family: "Inter", sans-serif;
+  background: #f7f9fb;
+}
+
+.wallet-header span {
+  font-size: 12px;
+  color: #0bb783;
+  font-weight: 600;
+}
+
+.wallet-header h1 {
+  font-size: 42px;
+  margin-top: 10px;
+}
+
+.wallet-header h1 span {
+  color: #0bb783;
+  font-size: larger;
+  font-style: italic;
+}
+
+/* Portfolio */
+.portfolio-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.label {
+  font-size: 12px;
+  color: #888;
+}
+
+.portfolio-card h2 {
+  font-size: 42px;
+  margin: 10px 0;
+}
+
+.portfolio-meta span {
+  margin-right: 15px;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.growth {
+  background: #e7f9f1;
+  color: #0bb783;
+}
+
+.instant {
+  background: #000;
+  color: #fff;
+}
+
+.actions button {
+  border: none;
+  padding: 18px 22px;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.deposit-btn {
+  background: #0bb783;
+  color: white;
+  margin-right: 10px;
+}
+
+.withdraw-btn {
+  background: black;
+  color: white;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.stat-card h3 {
+  font-size: 28px;
+}
+
+.green {
+  color: #0bb783;
+}
+
+/* Transactions */
+.transaction-box {
+  background: white;
+  margin-top: 40px;
+  padding: 25px;
+  border-radius: 14px;
+  display: none;
+}
+
+.transaction {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction:last-child {
+  border-bottom: none;
+}
+
+.credit {
+  color: #0bb783;
+  font-weight: 600;
+}
+
+.debit {
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+
+
+@media (max-width: 480px) {
+    .portfolio-card {
+        display: contents;
+    }
+
+    .stats-grid{
+      grid-template-columns: repeat(1 , 1fr)
+    }
+}

@@ -6,15 +6,15 @@ import MiniVerticalNav from "../components/MiniVerticalNav";
 import ListingPaymentModal from "../components/ListingPaymentModal";
 
 export default function CreateProperty() {
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [propertyId, setPropertyId] = useState(null);
   const [images, setImages] = useState([]);
 
-  // 🔥 Listing payment popup state
+  // Payment modal
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     title: "",
@@ -65,21 +65,18 @@ export default function CreateProperty() {
     setImages(Array.from(e.target.files));
   };
 
-  const isFormValid = () => {
-    return (
-      form.title &&
-      form.location &&
-      form.address &&
-      form.city &&
-      form.state &&
-      form.pincode &&
-      form.contact_name &&
-      form.contact_phone &&
-      form.contact_email &&
-      Number(form.price) > 0 &&
-      Number(form.area_sqft) > 0
-    );
-  };
+  const isFormValid = () =>
+    form.title &&
+    form.location &&
+    form.address &&
+    form.city &&
+    form.state &&
+    form.pincode &&
+    form.contact_name &&
+    form.contact_phone &&
+    form.contact_email &&
+    Number(form.price) > 0 &&
+    Number(form.area_sqft) > 0;
 
   const buildPayload = () => ({
     ...form,
@@ -95,7 +92,6 @@ export default function CreateProperty() {
     investors_max: Number(form.investors_max),
   });
 
-  
   /* ---------------- SUBMIT PROPERTY ---------------- */
 
   const submitProperty = async (e) => {
@@ -106,16 +102,33 @@ export default function CreateProperty() {
       return;
     }
 
+    if (images.length === 0) {
+      alert("Please upload at least one image");
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // 1️⃣ Create property
       const res = await apiFetch("/properties/", {
         method: "POST",
         body: JSON.stringify(buildPayload()),
       });
 
-      // 🔥 Save property ID & open payment popup
-      setPropertyId(res.id);
+      const newPropertyId = res.id;
+      setPropertyId(newPropertyId);
+
+      // 2️⃣ Upload images
+      const formData = new FormData();
+      images.forEach((img) => formData.append("images", img));
+
+      await apiFetch(`/properties/${newPropertyId}/images/`, {
+        method: "POST",
+        body: formData,
+      });
+
+      // 3️⃣ Open payment modal
       setShowPaymentModal(true);
     } catch (err) {
       alert(err?.detail || JSON.stringify(err));
@@ -127,52 +140,20 @@ export default function CreateProperty() {
   /* ---------------- LISTING PAYMENT ---------------- */
 
   const handleListingPayment = async () => {
-  setPaymentLoading(true);
-
-  try {
-    // ✅ STEP 1: Create listing request
-    const req = await apiFetch(
-      `/properties/${propertyId}/request-listing/`,
-      { method: "POST" }
-    );
-
-    console.log("Listing request created:", req);
-
-    
-
-    alert("Property submitted for admin approval");
-    setShowPaymentModal(false);
-  } catch (err) {
-    console.error(err);
-    alert(err?.error || err?.detail || "Listing payment failed");
-  } finally {
-    setPaymentLoading(false);
-  }
-};
-
-
-
-  /* ---------------- IMAGE UPLOAD ---------------- */
-
-  const uploadImages = async () => {
-    if (!propertyId || images.length === 0) {
-      alert("Select images first");
-      return;
-    }
-
-    const formData = new FormData();
-    images.forEach((img) => formData.append("images", img));
+    setPaymentLoading(true);
 
     try {
-      await apiFetch(`/properties/${propertyId}/images/`, {
+      await apiFetch(`/properties/${propertyId}/request-listing/`, {
         method: "POST",
-        body: formData,
       });
 
-      alert("Images uploaded successfully");
+      alert("Property submitted for admin approval");
+      setShowPaymentModal(false);
       navigate("/my-properties");
     } catch (err) {
-      alert("Image upload failed");
+      alert(err?.error || err?.detail || "Listing payment failed");
+    } finally {
+      setPaymentLoading(false);
     }
   };
 
@@ -187,7 +168,7 @@ export default function CreateProperty() {
       </div>
 
       <form onSubmit={submitProperty}>
-        <input name="title" placeholder="Title" onChange={handleChange} required />
+        <input name="title" placeholder="Title" required onChange={handleChange} />
         <textarea name="description" placeholder="Description" onChange={handleChange} />
 
         <select name="property_type" onChange={handleChange}>
@@ -216,6 +197,10 @@ export default function CreateProperty() {
         <input name="bedrooms" type="number" placeholder="Bedrooms" onChange={handleChange} />
         <input name="bathrooms" type="number" placeholder="Bathrooms" onChange={handleChange} />
 
+        {/* 🔥 IMAGE UPLOAD — BEFORE SUBMIT */}
+        <h4>Property Images</h4>
+        <input type="file" multiple accept="image/*" onChange={handleImagesChange} />
+
         <h4>Contact</h4>
         <input name="contact_name" placeholder="Contact Name" required onChange={handleChange} />
         <input name="contact_phone" placeholder="Contact Phone" required onChange={handleChange} />
@@ -226,26 +211,13 @@ export default function CreateProperty() {
         </button>
       </form>
 
-      {propertyId && (
-        <>
-          <h4>Upload Images</h4>
-          <input type="file" multiple accept="image/*" onChange={handleImagesChange} />
-          <button type="button" onClick={uploadImages}>
-            Upload Images
-          </button>
-        </>
-      )}
-
-      {/* 🔥 LISTING PAYMENT POPUP */}
+      {/* 🔥 LISTING PAYMENT MODAL */}
       <ListingPaymentModal
-  open={showPaymentModal}
-  loading={paymentLoading}
-  onClose={() => setShowPaymentModal(false)}
-  onConfirm={handleListingPayment}
-/>
-
+        open={showPaymentModal}
+        loading={paymentLoading}
+        onClose={() => setShowPaymentModal(false)}
+        onConfirm={handleListingPayment}
+      />
     </div>
   );
-}  
-
-
+}

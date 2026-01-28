@@ -6,6 +6,7 @@ import { container, item } from "../api/animations"
 import InvestmentCalculator from "../components/InvestmentCalculator";
 
 
+
 function Stat({ value, suffix = "", label, duration = 5000 }) {
   const [count, setCount] = useState(0);
 
@@ -141,8 +142,13 @@ export default function Home() {
         </motion.p>
 
         <motion.div className="hero-actions" variants={item}>
-          <a className="hero-btn primary">Buy Property</a>
-          <a className="hero-btn secondary">Join Committee</a>
+          <Link to="/" className="hero-btn primary">
+  Buy Property
+</Link>
+         <Link to="/committees" className="hero-btn secondary">
+  Join Committee
+</Link>
+
         </motion.div>
       </motion.div>
 
@@ -351,13 +357,13 @@ export default function Home() {
 
     {/* actions */}
     <div className="final-cta-actions">
-      <a href="/signup" className="final-cta-btn primary">
+      <a href="/register" className="final-cta-btn primary">
         Create Free Account <i className="bi bi-arrow-right"></i>
       </a>
 
-      <a href="/contact" className="final-cta-btn secondary">
+      {/* <a href="/contact" className="final-cta-btn secondary">
         Contact Us
-      </a>
+      </a> */}
     </div>
 
   </div>

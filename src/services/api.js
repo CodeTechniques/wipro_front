@@ -226,7 +226,7 @@ export const authAPI = {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.detail || 'Login failed');
+        throw new Error(data?.non_field_errors[0] || 'Login failed');
       }
 
       localStorage.setItem('access_token', data.access);

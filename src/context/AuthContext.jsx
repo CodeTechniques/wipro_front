@@ -50,10 +50,17 @@ export const AuthProvider = ({ children }) => {
       return { success: true, message: response.data.message };
     } catch (error) {
       console.error('Login error:', error);
+      if( error.message=='Invalid credentials'){
+        return { 
+        success: false, 
+        message: 'Invalid Username or Password' 
+      };
+      }else{
       return { 
         success: false, 
-        message: error.message || 'Login failed' 
+        message: error.message || error.non_field_errors[0] || 'Login failed' 
       };
+      }
     }
   };
 

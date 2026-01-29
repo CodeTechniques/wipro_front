@@ -42,9 +42,9 @@ export default function PropertyCard({ property, onImageUploaded }) {
             width="100%"
             height="100%"
             wrapperClassName="property-image-wrapper"
-            onError={(e) => {
-              e.target.src = "/placeholder.jpg";
-            }}
+            // onError={(e) => {
+            //   e.target.src = "/placeholder.jpg";
+            // }}
           />
 
           <input

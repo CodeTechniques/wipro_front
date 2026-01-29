@@ -3,18 +3,19 @@ import { apiFetch } from "../api/api";
 import "./create-property.css";
 import { useNavigate } from "react-router-dom";
 import MiniVerticalNav from "../components/MiniVerticalNav";
-import ListingPaymentModal from "../components/ListingPaymentModal";
+import PropertyCreationConfirmationModal from "../components/PropertyCreationConfirmationModal";
+import PropertyCreationResultModal from "../components/PropertyCreationResultModal";
 
 export default function CreateProperty() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const [propertyId, setPropertyId] = useState(null);
   const [images, setImages] = useState([]);
-
-  // Payment modal
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [paymentLoading, setPaymentLoading] = useState(false);
+  
+  // Modal states
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -92,9 +93,9 @@ export default function CreateProperty() {
     investors_max: Number(form.investors_max),
   });
 
-  /* ---------------- SUBMIT PROPERTY ---------------- */
+  /* ---------------- HANDLE FORM SUBMIT ---------------- */
 
-  const submitProperty = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     if (!isFormValid()) {
@@ -107,53 +108,45 @@ export default function CreateProperty() {
       return;
     }
 
+    // Show confirmation modal before submission
+    setShowConfirmationModal(true);
+  };
+
+  /* ---------------- ACTUAL API CALL ---------------- */
+
+  const createProperty = async () => {
     setLoading(true);
 
     try {
       // 1️⃣ Create property
-      const res = await apiFetch("/properties/", {
+      const propertyResponse = await apiFetch("/properties/", {
         method: "POST",
         body: JSON.stringify(buildPayload()),
       });
 
-      const newPropertyId = res.id;
-      setPropertyId(newPropertyId);
+      const newPropertyId = propertyResponse.id;
 
-      // 2️⃣ Upload images
-      const formData = new FormData();
-      images.forEach((img) => formData.append("images", img));
+      // 2️⃣ Upload images if any
+      if (images.length > 0) {
+        const formData = new FormData();
+        images.forEach((img) => formData.append("images", img));
 
-      await apiFetch(`/properties/${newPropertyId}/images/`, {
-        method: "POST",
-        body: formData,
-      });
+        await apiFetch(`/properties/${newPropertyId}/images/`, {
+          method: "POST",
+          body: formData,
+        });
+      }
 
-      // 3️⃣ Open payment modal
-      setShowPaymentModal(true);
+      // Store the API response for the result modal
+      setApiResponse(propertyResponse);
+      
+      // Show result modal
+      setShowResultModal(true);
+
     } catch (err) {
-      alert(err?.detail || JSON.stringify(err));
+      alert(err?.detail || JSON.stringify(err) || "Error creating property");
     } finally {
       setLoading(false);
-    }
-  };
-
-  /* ---------------- LISTING PAYMENT ---------------- */
-
-  const handleListingPayment = async () => {
-    setPaymentLoading(true);
-
-    try {
-      await apiFetch(`/properties/${propertyId}/request-listing/`, {
-        method: "POST",
-      });
-
-      alert("Property submitted for admin approval");
-      setShowPaymentModal(false);
-      navigate("/my-properties");
-    } catch (err) {
-      alert(err?.error || err?.detail || "Listing payment failed");
-    } finally {
-      setPaymentLoading(false);
     }
   };
 
@@ -167,56 +160,168 @@ export default function CreateProperty() {
         <MiniVerticalNav />
       </div>
 
-      <form onSubmit={submitProperty}>
-        <input name="title" placeholder="Title" required onChange={handleChange} />
-        <textarea name="description" placeholder="Description" onChange={handleChange} />
+      <form onSubmit={handleFormSubmit}>
+        <input 
+          name="title" 
+          placeholder="Title" 
+          required 
+          value={form.title}
+          onChange={handleChange} 
+        />
+        
+        <textarea 
+          name="description" 
+          placeholder="Description" 
+          value={form.description}
+          onChange={handleChange} 
+        />
 
-        <select name="property_type" onChange={handleChange}>
+        <select name="property_type" value={form.property_type} onChange={handleChange}>
           <option value="residential">Residential</option>
           <option value="commercial">Commercial</option>
           <option value="apartment">Apartment</option>
           <option value="villa">Villa</option>
         </select>
 
-        <select name="listing_type" onChange={handleChange}>
+        <select name="listing_type" value={form.listing_type} onChange={handleChange}>
           <option value="sale">For Sale</option>
           <option value="rent">For Rent</option>
           <option value="both">Sale & Rent</option>
         </select>
 
-        <input name="price" type="number" placeholder="Price" required onChange={handleChange} />
-        <input name="rent_price" type="number" placeholder="Rent Price (optional)" onChange={handleChange} />
+        <input 
+          name="price" 
+          type="number" 
+          placeholder="Price" 
+          required 
+          value={form.price}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="rent_price" 
+          type="number" 
+          placeholder="Rent Price (optional)" 
+          value={form.rent_price}
+          onChange={handleChange} 
+        />
 
-        <input name="location" placeholder="Location" required onChange={handleChange} />
-        <input name="address" placeholder="Full Address" required onChange={handleChange} />
-        <input name="city" placeholder="City" required onChange={handleChange} />
-        <input name="state" placeholder="State" required onChange={handleChange} />
-        <input name="pincode" placeholder="Pincode" required onChange={handleChange} />
+        <input 
+          name="location" 
+          placeholder="Location" 
+          required 
+          value={form.location}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="address" 
+          placeholder="Full Address" 
+          required 
+          value={form.address}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="city" 
+          placeholder="City" 
+          required 
+          value={form.city}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="state" 
+          placeholder="State" 
+          required 
+          value={form.state}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="pincode" 
+          placeholder="Pincode" 
+          required 
+          value={form.pincode}
+          onChange={handleChange} 
+        />
 
-        <input name="area_sqft" type="number" placeholder="Area (sqft)" required onChange={handleChange} />
-        <input name="bedrooms" type="number" placeholder="Bedrooms" onChange={handleChange} />
-        <input name="bathrooms" type="number" placeholder="Bathrooms" onChange={handleChange} />
+        <input 
+          name="area_sqft" 
+          type="number" 
+          placeholder="Area (sqft)" 
+          required 
+          value={form.area_sqft}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="bedrooms" 
+          type="number" 
+          placeholder="Bedrooms" 
+          value={form.bedrooms}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="bathrooms" 
+          type="number" 
+          placeholder="Bathrooms" 
+          value={form.bathrooms}
+          onChange={handleChange} 
+        />
 
-        {/* 🔥 IMAGE UPLOAD — BEFORE SUBMIT */}
+        {/* 🔥 IMAGE UPLOAD */}
         <h4>Property Images</h4>
-        <input type="file" multiple accept="image/*" onChange={handleImagesChange} />
+        <input 
+          type="file" 
+          multiple 
+          accept="image/*" 
+          onChange={handleImagesChange} 
+        />
 
         <h4>Contact</h4>
-        <input name="contact_name" placeholder="Contact Name" required onChange={handleChange} />
-        <input name="contact_phone" placeholder="Contact Phone" required onChange={handleChange} />
-        <input name="contact_email" type="email" placeholder="Contact Email" required onChange={handleChange} />
+        <input 
+          name="contact_name" 
+          placeholder="Contact Name" 
+          required 
+          value={form.contact_name}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="contact_phone" 
+          placeholder="Contact Phone" 
+          required 
+          value={form.contact_phone}
+          onChange={handleChange} 
+        />
+        
+        <input 
+          name="contact_email" 
+          type="email" 
+          placeholder="Contact Email" 
+          required 
+          value={form.contact_email}
+          onChange={handleChange} 
+        />
 
-        <button disabled={loading}>
+        <button type="submit" disabled={loading}>
           {loading ? "Creating..." : "Create Property"}
         </button>
       </form>
 
-      {/* 🔥 LISTING PAYMENT MODAL */}
-      <ListingPaymentModal
-        open={showPaymentModal}
-        loading={paymentLoading}
-        onClose={() => setShowPaymentModal(false)}
-        onConfirm={handleListingPayment}
+      {/* Confirmation Modal (before submission) */}
+      <PropertyCreationConfirmationModal
+        open={showConfirmationModal}
+        onClose={() => setShowConfirmationModal(false)}
+        onSubmit={createProperty}
+      />
+
+      {/* Result Modal (after API response) */}
+      <PropertyCreationResultModal
+        open={showResultModal}
+        responseData={apiResponse}
       />
     </div>
   );

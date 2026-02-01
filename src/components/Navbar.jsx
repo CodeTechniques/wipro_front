@@ -157,8 +157,8 @@ export default function Navbar() {
       <div className={`mobile-menu ${menuOpen ? "show" : ""}`}>
         <NavLink onClick={() => setMenuOpen(false)} to="/home">Home</NavLink>
         <NavLink onClick={() => setMenuOpen(false)} to="/properties">Properties</NavLink>
-        <NavLink onClick={() => setMenuOpen(false)} to="/about">About</NavLink>
-        <NavLink onClick={() => setMenuOpen(false)} to="/contact">Contact</NavLink>
+        {/* <NavLink onClick={() => setMenuOpen(false)} to="/about">About</NavLink> */}
+        {/* <NavLink onClick={() => setMenuOpen(false)} to="/contact">Contact</NavLink> */}
         <NavLink onClick={() => setMenuOpen(false)} to="/committees">Committees</NavLink>
         <NavLink onClick={() => setMenuOpen(false)} to="/wallet">Wallet</NavLink>
         <NavLink onClick={() => setMenuOpen(false)} to="/referral">Refer & Earn</NavLink>

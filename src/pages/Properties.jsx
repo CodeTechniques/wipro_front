@@ -3,6 +3,7 @@ import { apiFetch } from "../api/api";
 import PropertyCard from "../components/PropertyCard";
 import "../styles/property.css";
 import MiniVerticalNav from "../components/MiniVerticalNav";
+import CommitteeList from "./CommitteeList";
 
 export default function Properties() {
   const [properties, setProperties] = useState([]);
@@ -57,6 +58,7 @@ export default function Properties() {
   }, [searchQuery, type]);
 
   return (
+    <>
     <div className="properties-page">
       {/* LEFT – MINI NAV */}
       <div className="market-sidebar">
@@ -124,5 +126,8 @@ export default function Properties() {
         )}
       </div>
     </div>
+
+    <CommitteeList/>
+    </>
   );
 }

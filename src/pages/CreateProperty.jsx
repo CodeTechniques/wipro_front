@@ -317,8 +317,7 @@ export default function CreateProperty() {
         onClose={() => setShowConfirmationModal(false)}
         onSubmit={createProperty}
       />
-
-      {/* Result Modal (after API response) */}
+      
       <PropertyCreationResultModal
         open={showResultModal}
         responseData={apiResponse}

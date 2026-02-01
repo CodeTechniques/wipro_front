@@ -12,9 +12,9 @@ export default function PropertyCard({ property, onImageUploaded }) {
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const { currency } = useCurrency(); // ✅ GLOBAL CURRENCY
+  const { currency } = useCurrency();
 
-  const handleImageUpload = async (files) => {
+const handleImageUpload = async (files) => {
     try {
       setUploading(true);
       await uploadPropertyImages(property.id, Array.from(files));
@@ -35,25 +35,21 @@ export default function PropertyCard({ property, onImageUploaded }) {
             {property.property_type?.toUpperCase() || "PROPERTY"}
           </span>
 
-          <LazyLoadImage
-            src={property.main_image || "/placeholder.jpg"}
-            alt={property.title}
-            effect="blur"
-            width="100%"
-            height="100%"
-            wrapperClassName="property-image-wrapper"
-            // onError={(e) => {
-            //   e.target.src = "/placeholder.jpg";
-            // }}
-          />
+        <LazyLoadImage
+  src={property.main_image || "/placeholder.jpg"}
+  alt={property.title}
+  effect="blur"
+  className="w-full h-full object-cover absolute inset-0"
+  wrapperClassName="relative w-full h-full"
+/>
 
-          <input
+          {/* <input
             type="file"
             multiple
             accept="image/*"
             disabled={uploading}
             onChange={(e) => handleImageUpload(e.target.files)}
-          />
+          /> */}
         </div>
 
         {/* BODY */}

@@ -1,6 +1,6 @@
 // Get environment variables
-const API_BASE_URL = "http://127.0.0.1:8000/api";
-// const API_BASE_URL = "https://backend.wipogroup.in/api";
+// const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = "https://backend.wipogroup.in/api";
 
  const AUTH_PREFIX = "/auth";
  const TOKEN_REFRESH_ENDPOINT ="/auth/token/refresh/";

@@ -129,7 +129,7 @@ IFSC Code: ${bankIfsc}
           }}
         >
           <p style={{ margin: 0, fontSize: 14 }}>Available Balance</p>
-          <h3>{formatPrice(wallet.net_balance, currency)}</h3>
+          <h3>{formatPrice(wallet.available_balance, currency)}</h3>
         </div>
       )}
 

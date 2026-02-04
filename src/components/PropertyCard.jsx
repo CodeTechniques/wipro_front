@@ -14,7 +14,7 @@ export default function PropertyCard({ property, onImageUploaded }) {
 
   const { currency } = useCurrency();
 
-const handleImageUpload = async (files) => {
+  const handleImageUpload = async (files) => {
     try {
       setUploading(true);
       await uploadPropertyImages(property.id, Array.from(files));
@@ -29,19 +29,19 @@ const handleImageUpload = async (files) => {
   return (
     <>
       <div className="property-card">
-        {/* IMAGE */}
-        <div className="property-image">
+        {/* IMAGE CONTAINER WITH FIXED ASPECT RATIO */}
+        <div className="property-image aspect-[4/3] relative overflow-hidden rounded-t-lg">
           <span className="property-tag">
             {property.property_type?.toUpperCase() || "PROPERTY"}
           </span>
 
-        <LazyLoadImage
-  src={property.main_image || "/placeholder.jpg"}
-  alt={property.title}
-  effect="blur"
-  className="w-full h-full object-cover absolute inset-0"
-  wrapperClassName="relative w-full h-full"
-/>
+          <LazyLoadImage
+            src={property.main_image || "/placeholder.jpg"}
+            alt={property.title}
+            effect="blur"
+            className="w-full h-full object-cover"
+            wrapperClassName="w-full h-full"
+          />
 
           {/* <input
             type="file"
@@ -49,6 +49,7 @@ const handleImageUpload = async (files) => {
             accept="image/*"
             disabled={uploading}
             onChange={(e) => handleImageUpload(e.target.files)}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
           /> */}
         </div>
 

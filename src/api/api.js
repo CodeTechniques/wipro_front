@@ -1,6 +1,6 @@
 
-// const API_BASE = "http://127.0.0.1:8000/api";
-const API_BASE = "https://backend.wipogroup.in/api";
+const API_BASE = "http://127.0.0.1:8000/api";
+// const API_BASE = "https://backend.wipogroup.in/api";
 const REFRESH_ENDPOINT = "/auth/token/refresh/";
 
 let isRefreshing = false;

@@ -47,7 +47,7 @@ const Wallet = () => {
       <div className="portfolio-card">
         <div>
           <p className="label">GLOBAL PORTFOLIO VALUE</p>
-          <h2>{formatPrice(wallet.net_balance, currency)}</h2>
+          <h2>{formatPrice(wallet.available_balance, currency)}</h2>
 
           <div className="portfolio-meta">
             <span className="growth">LIVE CALCULATED</span>
@@ -69,7 +69,7 @@ const Wallet = () => {
       <div className="stats-grid">
         <div className="stat-card">
           <p>TOTAL DEPOSIT</p>
-          <h3>{formatPrice(wallet.total_invested, currency)}</h3>
+          <h3>{formatPrice(wallet.total_deposit, currency)}</h3>
           <small>Total Investmest </small>
         </div>
 
@@ -101,14 +101,14 @@ const Wallet = () => {
         <div className="stat-card">
           <p>TOTAL PAID</p>
           <h3 className="red">
-            {formatPrice(wallet.total_paid, currency)}
+            {formatPrice(wallet.total_paid +wallet.total_invested, currency)}
           </h3>
           <small>Amount you Spent</small>
         </div>
 
         <div className="stat-card highlight">
           <p>NET BALANCE</p>
-          <h3>{formatPrice(wallet.net_balance, currency)}</h3>
+          <h3>{formatPrice(wallet.available_balance, currency)}</h3>
           <small>Current Balance</small>
         </div>
       </div>

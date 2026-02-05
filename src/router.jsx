@@ -48,6 +48,7 @@ import PropertyRequestForm from "./pages/PropertyRequestForm";
 import MyPropertyRequests from "./pages/MyPropertyRequests";
 import CommitteeWithdraw from "./pages/CommitteeWithdraw";
 import WithdrawPage from "./pages/WithdrawPage";
+import AboutWipo from "./pages/AboutPage";
 
 
 
@@ -487,6 +488,7 @@ export const router = createBrowserRouter([
   },
 
   { path: "/property/:id", element: <PropertyDetail /> },
+  {path: "/aboutUs", element:<AboutWipo/>},
 
   /* 🔥 Catch-all */
   { path: "*", element: <Navigate to="/" replace /> },

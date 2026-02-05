@@ -489,6 +489,7 @@ export const router = createBrowserRouter([
 
   { path: "/property/:id", element: <PropertyDetail /> },
   {path: "/aboutUs", element:<AboutWipo/>},
+  {path: "/contactUs", element:<ContactUs/>},
 
   /* 🔥 Catch-all */
   { path: "*", element: <Navigate to="/" replace /> },

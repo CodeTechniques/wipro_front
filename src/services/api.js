@@ -238,6 +238,30 @@ export const authAPI = {
     }
   },
 
+
+  contact: async (credentials) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}${AUTH_PREFIX}/contact-us/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.non_field_errors[0] || 'Login failed');
+      }
+
+      // localStorage.setItem('access_token', data.access);
+      // localStorage.setItem('refresh_token', data.refresh);
+
+      return { data, status: response.status, ok: response.ok };
+    } catch (error) {
+      throw error;
+    }
+  },
+
   /**
    * Logout current user and invalidate tokens
    * @returns {Promise<Object>} Success confirmation

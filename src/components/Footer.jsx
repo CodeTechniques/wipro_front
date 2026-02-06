@@ -29,8 +29,8 @@ export default function Footer() {
         {/* COMPANY */}
         <div className="footer-links">
           <h4>Company</h4>
-          {/* <Link to="/about">About Us</Link> */}
-          {/* <Link to="/contact">Contact Us</Link> */}
+          <Link to="/aboutUs">About Us</Link>
+          <Link to="/contactUs">Contact Us</Link>
           <Link to="/properties">Properties</Link>
         </div>
 

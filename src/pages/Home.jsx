@@ -361,9 +361,9 @@ export default function Home() {
         Create Free Account <i className="bi bi-arrow-right"></i>
       </a>
 
-      {/* <a href="/contact" className="final-cta-btn secondary">
+      <a href="/contactUs" className="final-cta-btn secondary">
         Contact Us
-      </a> */}
+      </a>
     </div>
 
   </div>

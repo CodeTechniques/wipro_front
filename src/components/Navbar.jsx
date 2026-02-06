@@ -66,12 +66,12 @@ export default function Navbar() {
           {/* CENTER */}
           <ul className="navbar-links desktop-only">
             <li><NavLink to="/home">Home</NavLink></li>
+            <li><NavLink to="/aboutUs">About</NavLink></li>
             <li><NavLink to="/">Properties</NavLink></li>
-            {/* <li><NavLink to="/about">About</NavLink></li>
-            <li><NavLink to="/contact">Contact</NavLink></li> */}
             <li><NavLink to="/committees">Committees</NavLink></li>
             
             <li><NavLink to="/referral">Refer & Earn</NavLink></li>
+            <li><NavLink to="/contactUs">Contact</NavLink></li>
           </ul>
 
           {/* RIGHT */}
@@ -156,12 +156,12 @@ export default function Navbar() {
       {/* MOBILE MENU */}
       <div className={`mobile-menu ${menuOpen ? "show" : ""}`}>
         <NavLink onClick={() => setMenuOpen(false)} to="/home">Home</NavLink>
+        <NavLink onClick={() => setMenuOpen(false)} to="/aboutUs">About</NavLink>
         <NavLink onClick={() => setMenuOpen(false)} to="/properties">Properties</NavLink>
-        {/* <NavLink onClick={() => setMenuOpen(false)} to="/about">About</NavLink> */}
-        {/* <NavLink onClick={() => setMenuOpen(false)} to="/contact">Contact</NavLink> */}
         <NavLink onClick={() => setMenuOpen(false)} to="/committees">Committees</NavLink>
         <NavLink onClick={() => setMenuOpen(false)} to="/wallet">Wallet</NavLink>
         <NavLink onClick={() => setMenuOpen(false)} to="/referral">Refer & Earn</NavLink>
+        <NavLink onClick={() => setMenuOpen(false)} to="/contactUs">Contact</NavLink>
       </div>
     </>
   );

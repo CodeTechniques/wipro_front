@@ -53,7 +53,7 @@ const AboutWipo = () => {
               </div>
 
               <div className="about-cta-buttons">
-                <a href="/contact" className="about-btn about-btn-primary">
+                <a href="/contactUs" className="about-btn about-btn-primary">
                   Start Investing
                   <ArrowRight size={22} weight="bold" />
                 </a>

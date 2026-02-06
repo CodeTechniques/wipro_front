@@ -19,10 +19,10 @@ export default function Footer() {
           </p>
 
           <div className="social-icons">
-            <a href="#"><i className="bi bi-instagram"></i></a>
-            <a href="#"><i className="bi bi-facebook"></i></a>
-            <a href="#"><i className="bi bi-linkedin"></i></a>
-            <a href="#"><i className="bi bi-youtube"></i></a>
+            <a href="
+https://www.instagram.com/wipogroup.llc?igsh=MTc0ZHo2bnh0MzM4Nw=="><i className="bi bi-instagram"></i></a>
+            <a href="https://whatsapp.com/channel/0029Vb7qkhqJuyAI12uYRl0I"><i className="bi bi-whatsapp"></i></a>
+            <a href="https://youtube.com/@wipogroup?si=R_krQUlAQVrHn_ZU"><i className="bi bi-youtube"></i></a>
           </div>
         </div>
 
@@ -54,6 +54,7 @@ export default function Footer() {
           <div className="connect-item">
             <i className="bi bi-telephone"></i>
             <span>+1 (938) 209-0088</span>
+            <span>+91 9759109006</span>
           </div>
         </div>
       </div>

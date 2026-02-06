@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Alert from './Alert';
-import './auth.css'
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -11,49 +10,35 @@ const LoginForm = () => {
     password: ''
   });
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({ show: false, message: '', type: 'info' });
   
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get the page user was trying to visit before login
   const from = location.state?.from?.pathname || '/home';
-
-  const showAlert = (message, type = 'info') => {
-    setAlert({ show: true, message, type });
-  };
-
-  const hideAlert = () => {
-    setAlert({ show: false, message: '', type: 'info' });
-  };
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Hide alert when user starts typing
-    if (alert.show) {
-      hideAlert();
-    }
   };
 
   const validateForm = () => {
     if (!formData.username.trim()) {
-      showAlert('Username is required', 'error');
+      toast.error('Username is required');
       return false;
     }
     if (!formData.password) {
-      showAlert('Password is required', 'error');
+      toast.error('Password is required');
       return false;
     }
     if (formData.username.length < 3) {
-      showAlert('Username must be at least 3 characters', 'error');
+      toast.error('Username must be at least 3 characters');
       return false;
     }
     if (formData.password.length < 6) {
-      showAlert('Password must be at least 6 characters', 'error');
+      toast.error('Password must be at least 6 characters');
       return false;
     }
     return true;
@@ -67,108 +52,842 @@ const LoginForm = () => {
     }
 
     setLoading(true);
-    showAlert('Signing in...', 'info');
 
     try {
       const result = await login(formData);
       
       if (result.success) {
-        showAlert('✅ Login successful! Redirecting...', 'success');
+        toast.success('✅ Login successful! Redirecting...');
         setTimeout(() => {
           navigate(from, { replace: true });
         }, 1500);
       } else {
-        showAlert(result.message || 'Login failed. Please try again.', 'error');
+        toast.error(result.message || 'Login failed. Please try again.');
       }
     } catch (error) {
       console.error('Login error:', error);
-      showAlert('Network error. Please check your connection and try again.', 'error');
+      toast.error('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-      <div className="auth-header">
-        <h2 className="auth-title">Welcome Back!</h2>
-        <p className="auth-subtitle">Sign in to your account</p>
-      </div>
+    <>
+      <ToastContainer 
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       
-      {alert.show && (
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          onClose={hideAlert}
-          autoClose={alert.type !== 'error'}
-          duration={3000}
-        />
-      )}
+      <div className="auth-page">
+        <div className="auth-container">
+          <div className="auth-header">
+            <h2 className="auth-title">Welcome Back!</h2>
+            <p className="auth-subtitle">Sign in to your account</p>
+          </div>
 
-      <form onSubmit={handleSubmit} className="auth-form">
-        <div className="form-group">
-          <label htmlFor="username" className="form-label">
-            Username <span className="required">*</span>
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className="form-input"
-            placeholder="Enter your username"
-            disabled={loading}
-            required
-            autoComplete="username"
-          />
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">
+                Username <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Enter your username"
+                disabled={loading}
+                required
+                autoComplete="username"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
+                Password <span className="required">*</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Enter your password"
+                disabled={loading}
+                required
+                autoComplete="current-password"
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="form-button"
+              disabled={loading || !formData.username || !formData.password}
+            >
+              {loading ? (
+                <>
+                  <span className="button-spinner"></span>
+                  Signing in...
+                </>
+              ) : (
+                '🚀 Sign In'
+              )}
+            </button>
+          </form>
+
+          <div className="auth-switch">
+            <div>
+            Forget Password? <Link to="/forget-password">Forget Password</Link>
+            </div>
+            <div>
+            Don't have an account? <Link to="/register">Create one here</Link>
+            </div>
+          </div>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="password" className="form-label">
-            Password <span className="required">*</span>
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="form-input"
-            placeholder="Enter your password"
-            disabled={loading}
-            required
-            autoComplete="current-password"
-          />
-        </div>
-
-        <button 
-          type="submit" 
-          className="form-button"
-          disabled={loading || !formData.username || !formData.password}
-        >
-          {loading ? (
-            <>
-              <span className="button-spinner"></span>
-              Signing in...
-            </>
-          ) : (
-            '🚀 Sign In'
-          )}
-        </button>
-      </form>
-
-      <div className="auth-switch">
-        Don't have an account? <Link to="/register">Create one here</Link>
       </div>
 
-      {/* Demo credentials for testing */}
-      <div className="demo-info">
-        <p><strong>Demo:</strong> Create a new account or use existing credentials</p>
-      </div>
-      </div>
-    </div>
+      <style jsx>{`
+        /* Profile Tabs */
+        .profile-tabs {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 2rem;
+          border-bottom: 2px solid #e1e1e1;
+        }
+
+        .tab-button {
+          padding: 1rem 2rem;
+          background: none;
+          border: none;
+          font-size: 1rem;
+          cursor: pointer;
+          color: #666;
+          border-bottom: 3px solid transparent;
+          transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+          color: #333;
+        }
+
+        .tab-button.active {
+          color: #667eea;
+          border-bottom-color: #667eea;
+          font-weight: 600;
+        }
+
+        /* Environment status indicator */
+        .env-status {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: rgba(76, 175, 80, 0.9);
+          color: white;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          z-index: 1000;
+        }
+
+        .env-status.development {
+          background: rgba(255, 152, 0, 0.9);
+        }
+
+        .env-status.production {
+          background: rgba(76, 175, 80, 0.9);
+        }
+
+        /* Enhanced Auth Form Styles */
+        .auth-container {
+          background: white;
+          padding: 2.5rem;
+          border-radius: 20px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          width: 100%;
+          max-width: 500px;
+          margin: 1rem;
+        }
+
+        .register-container {
+          max-width: 600px;
+        }
+
+        .auth-header {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .auth-title {
+          color: #333;
+          font-size: 2rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .auth-subtitle {
+          color: #666;
+          font-size: 1rem;
+          margin: 0;
+        }
+
+        .auth-form {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .form-label {
+          font-weight: 500;
+          color: #555;
+          font-size: 0.9rem;
+        }
+
+        .required {
+          color: #e74c3c;
+        }
+
+        .form-input {
+          padding: 1rem;
+          border: 2px solid #e1e1e1;
+          border-radius: 10px;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+          background: white;
+        }
+
+        .form-input:focus {
+          outline: none;
+          border-color: #fff;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input:disabled {
+          background: #fff;
+          cursor: not-allowed;
+          opacity: 0.7;
+        }
+
+        .form-input-error {
+          border-color: #e74c3c;
+        }
+
+        .form-input-error:focus {
+          border-color: #e74c3c;
+          box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .form-input-success {
+          border-color: #27ae60;
+        }
+
+        .form-input-success:focus {
+          border-color: #27ae60;
+          box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+        }
+
+        .form-help {
+          font-size: 0.8rem;
+          color: #666;
+          margin-top: 0.25rem;
+        }
+
+        .form-error {
+          font-size: 0.8rem;
+          color: #e74c3c;
+          margin-top: 0.25rem;
+        }
+
+        .form-success {
+          font-size: 0.8rem;
+          color: #27ae60;
+          margin-top: 0.25rem;
+        }
+
+        .form-button {
+          padding: 1rem;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          border-radius: 10px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          min-height: 56px;
+        }
+
+        .form-button:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
+        .button-spinner {
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-left-color: white;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-top: 0.5rem;
+        }
+
+        .strength-bar {
+          flex: 1;
+          height: 4px;
+          background: #e1e1e1;
+          border-radius: 2px;
+          overflow: hidden;
+        }
+
+        .strength-fill {
+          height: 100%;
+          transition: all 0.3s ease;
+          border-radius: 2px;
+        }
+
+        .strength-text {
+          font-size: 0.8rem;
+          font-weight: 500;
+          min-width: 60px;
+        }
+
+        /* Auth Switch */
+        .auth-switch {
+          text-align: center;
+          margin-top: 1.5rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #e1e1e1;
+          color: #666;
+        }
+
+        .auth-switch a {
+          color: #667eea;
+          text-decoration: none;
+          font-weight: 500;
+        }
+
+        .auth-switch a:hover {
+          text-decoration: underline;
+        }
+
+        /* Demo Info & Registration Info */
+        .demo-info, .registration-info {
+          margin-top: 1.5rem;
+          padding: 1rem;
+          background: #f8f9fa;
+          border-radius: 10px;
+          border-left: 4px solid #667eea;
+        }
+
+        .demo-info p, .registration-info p {
+          margin: 0 0 0.5rem 0;
+          font-size: 0.9rem;
+          color: #555;
+        }
+
+        .registration-info ul {
+          list-style: none;
+          margin: 0.5rem 0 0 0;
+          padding: 0;
+        }
+
+        .registration-info li {
+          font-size: 0.85rem;
+          color: #666;
+          margin-bottom: 0.25rem;
+        }
+
+        /* Alert Styles (Enhanced) */
+        .alert {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          padding: 1rem 1.5rem;
+          border-radius: 10px;
+          margin-bottom: 1rem;
+          border: 1px solid transparent;
+          position: relative;
+          animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .alert-content {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          flex: 1;
+        }
+
+        .alert-icon {
+          font-size: 1.2rem;
+          margin-top: 0.1rem;
+        }
+
+        .alert-message {
+          flex: 1;
+          line-height: 1.4;
+        }
+
+        .alert-close {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          padding: 0;
+          margin-left: 1rem;
+          opacity: 0.7;
+          transition: opacity 0.3s ease;
+          line-height: 1;
+        }
+
+        .alert-close:hover {
+          opacity: 1;
+        }
+
+        .alert-success {
+          background: rgba(76, 175, 80, 0.1);
+          color: #2e7d32;
+          border-color: rgba(76, 175, 80, 0.3);
+        }
+
+        .alert-error {
+          background: rgba(244, 67, 54, 0.1);
+          color: #c62828;
+          border-color: rgba(244, 67, 54, 0.3);
+        }
+
+        .alert-warning {
+          background: rgba(255, 152, 0, 0.1);
+          color: #ef6c00;
+          border-color: rgba(255, 152, 0, 0.3);
+        }
+
+        .alert-info {
+          background: rgba(33, 150, 243, 0.1);
+          color: #1565c0;
+          border-color: rgba(33, 150, 243, 0.3);
+        }
+
+        /* Loading Animation */
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        /* General Styles */
+        body {
+          font-family: 'Arial', sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f7f7f7;
+          color: #333;
+        }
+
+        h1, h2, h3 {
+          color: #2c3e50;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+          background-color: #2980b9;
+          padding: 15px;
+          color: white;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+          color: white;
+          text-decoration: none;
+          padding: 10px 15px;
+          font-weight: 500;
+        }
+
+        .navbar a:hover {
+          background-color: #3498db;
+          border-radius: 4px;
+        }
+
+        /* Container Styles */
+        .main-content {
+          padding: 20px 40px;
+          min-height: calc(100vh - 80px);
+        }
+
+        /* Button Styles */
+        .btn {
+          padding: 10px 15px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: background-color 0.2s ease;
+        }
+
+        .btn-primary {
+          background-color: #2980b9;
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background-color: #3498db;
+        }
+
+        .btn-secondary {
+          background-color: #7f8c8d;
+          color: white;
+        }
+
+        .btn-secondary:hover {
+          background-color: #95a5a6;
+        }
+
+        .btn-danger {
+          background-color: #e74c3c;
+          color: white;
+        }
+
+        .btn-danger:hover {
+          background-color: #c0392b;
+        }
+
+        /* Property Cards */
+        .property-card {
+          background: white;
+          border: 1px solid #e2e2e2;
+          border-radius: 8px;
+          padding: 15px;
+          margin: 15px 0;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .property-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-image {
+          height: 200px;
+          background-color: #f1f1f1;
+          border-radius: 6px;
+          overflow: hidden;
+          margin-bottom: 10px;
+        }
+
+        .property-image img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: cover;
+        }
+
+        .property-title {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 5px;
+          color: #2c3e50;
+        }
+
+        .property-description {
+          font-size: 14px;
+          color: #7f8c8d;
+          line-height: 1.4;
+        }
+
+        .property-price {
+          font-size: 16px;
+          font-weight: bold;
+          color: #2980b9;
+          margin-top: 8px;
+        }
+
+        /* Loader and Error Messages */
+        .loading {
+          text-align: center;
+          font-size: 20px;
+          color: #2980b9;
+          margin: 30px 0;
+        }
+
+        .error {
+          color: #e74c3c;
+          font-weight: bold;
+          padding: 10px;
+          background-color: #fdf2f2;
+          border: 1px solid #e74c3c;
+          border-radius: 4px;
+          margin: 10px 0;
+        }
+
+        /* FULL SCREEN CENTERING FOR LOGIN */
+        .auth-page {
+          position: fixed;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f7f7f7;
+          z-index: 1;
+          width: 100%;
+          min-height: 100vh;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .auth-container {
+            padding: 2rem;
+            margin: 0.5rem;
+            max-width: 90%;
+          }
+
+          .form-row {
+            grid-template-columns: 1fr;
+          }
+
+          .auth-title {
+            font-size: 1.75rem;
+          }
+
+          .password-strength {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
+
+          .strength-text {
+            min-width: auto;
+          }
+
+          .navbar {
+            flex-direction: column;
+            padding: 10px;
+          }
+
+          .navbar a {
+            margin: 5px 0;
+            padding: 8px 12px;
+          }
+
+          .main-content {
+            padding: 15px;
+          }
+
+          .property-card {
+            padding: 12px;
+          }
+
+          .property-image {
+            height: 150px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .auth-container {
+            padding: 1.5rem;
+            margin: 0.5rem;
+            max-width: 95%;
+          }
+
+          .auth-title {
+            font-size: 1.5rem;
+          }
+
+          .form-button {
+            font-size: 1rem;
+            padding: 0.875rem;
+          }
+
+          .navbar {
+            font-size: 14px;
+          }
+
+          .btn {
+            padding: 8px 12px;
+            font-size: 13px;
+          }
+
+          .property-title {
+            font-size: 16px;
+          }
+
+          .auth-switch {
+            font-size: 0.9rem;
+          }
+
+          .demo-info {
+            padding: 0.75rem;
+            font-size: 0.85rem;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .auth-container {
+            padding: 1.25rem;
+            border-radius: 15px;
+          }
+
+          .auth-title {
+            font-size: 1.25rem;
+          }
+
+          .auth-subtitle {
+            font-size: 0.9rem;
+          }
+
+          .form-input {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+          }
+
+          .form-button {
+            font-size: 0.9rem;
+            padding: 0.75rem;
+          }
+
+          .auth-switch {
+            font-size: 0.8rem;
+          }
+        }
+
+        /* Tablet Landscape */
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .auth-container {
+            max-width: 450px;
+            padding: 2rem;
+          }
+        }
+
+        /* Large Desktop */
+        @media (min-width: 1440px) {
+          .auth-container {
+            max-width: 550px;
+            padding: 3rem;
+          }
+
+          .auth-title {
+            font-size: 2.5rem;
+          }
+
+          .auth-subtitle {
+            font-size: 1.125rem;
+          }
+        }
+
+        /* Print Styles */
+        @media print {
+          .auth-page {
+            position: static;
+            background: white;
+          }
+
+          .auth-container {
+            box-shadow: none;
+            border: 1px solid #ddd;
+            max-width: 100%;
+          }
+
+          .form-button {
+            background: #667eea !important;
+            color: white !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+          .auth-page {
+            background: #f7f7f7;
+          }
+
+          .auth-container {
+            background: #fff;
+            color: #fff;
+          }
+
+          .auth-title {
+            color: #000;
+          }
+
+          .auth-subtitle {
+            color: #555;
+          }
+
+          .form-label {
+            color: #555;
+          }
+
+          .form-input {
+            background: #fff;
+            border-color: #4d4d4d;
+            color: #555;
+          }
+
+          .form-input:focus {
+            border-color: #667eea;
+          }
+
+          .demo-info {
+            background: #3d3d3d;
+            color: #ccc;
+          }
+        }
+      `}</style>
+    </>
   );
 };
 

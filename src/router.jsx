@@ -50,8 +50,9 @@ import CommitteeWithdraw from "./pages/CommitteeWithdraw";
 import WithdrawPage from "./pages/WithdrawPage";
 import AboutWipo from "./pages/AboutPage";
 import Contact from "./pages/contactUs";
-
-
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import VerifyOTPPage from "./pages/VerifyOTPPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 
 
@@ -68,6 +69,9 @@ const Protected = ({ children }) => {
 export const router = createBrowserRouter([
 
    { path: "/login", element: <LoginForm /> },
+   { path: "/forget-password", element: <ForgotPasswordPage /> },
+   { path: "/varify-otp", element: <VerifyOTPPage /> },
+   { path: "/reset-password", element: <ResetPasswordPage /> },
   { path: "/register", element: <RegisterForm /> },
 
    {

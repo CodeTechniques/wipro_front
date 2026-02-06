@@ -109,6 +109,7 @@ const Contact = () => {
                 <Phone size={24} weight="duotone" />
               </div>
               <h3 className="contact-info-title">Phone Number</h3>
+              <p className="contact-info-text">+91 9759109006</p>
               <p className="contact-info-text">+1 (938) 209 0088</p>
               <span className="contact-info-badge">MON – SAT: 10AM – 7PM</span>
             </div>

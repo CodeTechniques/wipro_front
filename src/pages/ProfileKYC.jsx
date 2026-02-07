@@ -198,10 +198,10 @@ export default function KYC() {
       });
 
       // Add referral code if exists
-      // const referralCode = localStorage.getItem("referral_code");
-      // if (referralCode) {
-      //   data.append("referral_code", referralCode);
-      // }
+      const referralCode = localStorage.getItem("referral_code");
+      if (referralCode) {
+        data.append("referral_code", referralCode);
+      }
 
       // Send FormData directly to backend
       await apiFetch("/auth/kyc/", {

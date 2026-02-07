@@ -338,9 +338,9 @@ const RegisterForm = () => {
         Already have an account? <Link to="/login">Sign in here</Link>
       </div>
 
-      <div className="registration-info">
+      {/* <div className="registration-info">
       
-      </div>
+      </div> */}
     </div>
   );
 };

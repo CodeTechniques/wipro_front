@@ -117,7 +117,7 @@ body {
 
 /* === REQUEST CARD === */
 .request-card {
-  background: var(--bg-primary);
+  background: #fff;
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-2xl);
   padding: var(--spacing-2xl);
@@ -162,13 +162,9 @@ body {
 .request-card h2 {
   font-size: 1.875rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #000;
   margin-bottom: var(--spacing-xl);
   text-align: center;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   position: relative;
   padding-bottom: var(--spacing-md);
 }
@@ -212,12 +208,13 @@ body {
   75% { transform: translateX(5px); }
 }
 
+
 /* === FORM LABELS === */
 .request-card label {
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #555;
   margin-bottom: var(--spacing-sm);
   margin-top: var(--spacing-lg);
   transition: color var(--transition-base);
@@ -234,9 +231,9 @@ body {
   width: 100%;
   padding: 0.875rem 1rem;
   font-size: 1rem;
-  color: var(--text-primary);
-  background: var(--bg-secondary);
-  border: 2px solid var(--border-color);
+  color: #555;
+  background: #fff;
+  border: 2px solid #555;
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   font-family: inherit;
@@ -245,15 +242,15 @@ body {
 }
 
 .request-card input::placeholder {
-  color: var(--text-light);
+  color: #000;
 }
 
 .request-card input:focus,
 .request-card select:focus {
-  background: var(--bg-primary);
+  background: #fff;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 4px var(--border-focus);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 .request-card input:disabled,
@@ -273,9 +270,9 @@ body {
   padding-right: 3rem;
 }
 
-.request-card select:focus {
+/* .request-card select:focus {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%236366f1' d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-}
+} */
 
 /* === NUMBER INPUT STYLING === */
 .request-card input[type="number"] {
@@ -572,10 +569,10 @@ body {
   background: rgba(16, 185, 129, 0.05);
 }
 
-.request-card input:invalid:not(:placeholder-shown):not(:focus) {
+/* .request-card input:invalid:not(:placeholder-shown):not(:focus) {
   border-color: var(--error-color);
   background: rgba(239, 68, 68, 0.05);
-}
+} */
 
 /* === HELPER TEXT === */
 .request-card .helper-text {
@@ -621,4 +618,8 @@ body {
   100% {
     transform: scale(1);
   }
+}
+
+.form-input::placeholder {
+  color: var(--text-light);
 }

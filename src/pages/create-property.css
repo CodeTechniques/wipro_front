@@ -5,7 +5,9 @@
   padding: 20px;
   border-radius: 8px;
 }
-
+h2 , h4{
+  color:#000;
+}
 .create-property input,
 .create-property textarea,
 .create-property select {
@@ -17,6 +19,9 @@
 .create-property label {
   display: block;
   margin-bottom: 6px;
+}
+.form-input::placeholder {
+  color: var(--text-light);
 }
 
 button {

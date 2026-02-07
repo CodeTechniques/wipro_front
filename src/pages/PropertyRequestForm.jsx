@@ -75,6 +75,7 @@ export default function PropertyRequestForm() {
           value={form.full_name}
           onChange={handleChange}
           required
+          className="form-input"
         />
 
         <label>Age</label>
@@ -83,6 +84,7 @@ export default function PropertyRequestForm() {
           name="age"
           value={form.age}
           onChange={handleChange}
+          className="form-input"
           required
         />
 
@@ -92,6 +94,7 @@ export default function PropertyRequestForm() {
           name="occupation"
           value={form.occupation}
           onChange={handleChange}
+          className="form-input"
           required
         />
 
@@ -100,6 +103,7 @@ export default function PropertyRequestForm() {
           name="payment_mode"
           value={form.payment_mode}
           onChange={handleChange}
+          className="form-input request-card"
         >
           <option value="single">Single Payment</option>
           <option value="group">Group Payment</option>
@@ -114,6 +118,7 @@ export default function PropertyRequestForm() {
               min="2"
               value={form.group_size}
               onChange={handleChange}
+              className="form-input"
               required
             />
           </>

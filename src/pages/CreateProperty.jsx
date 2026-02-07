@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MiniVerticalNav from "../components/MiniVerticalNav";
 import PropertyCreationConfirmationModal from "../components/PropertyCreationConfirmationModal";
 import PropertyCreationResultModal from "../components/PropertyCreationResultModal";
+import { color } from "framer-motion";
 
 // Helper function to check image aspect ratio
 const checkImageRatio = (file, targetRatio = 4/3, tolerance = 0.1) => {
@@ -281,6 +282,7 @@ export default function CreateProperty() {
           placeholder="Title *" 
           required 
           value={form.title}
+          className="form-input"
           onChange={handleChange} 
         />
         
@@ -289,17 +291,17 @@ export default function CreateProperty() {
           placeholder="Description" 
           value={form.description}
           onChange={handleChange} 
-          className="border-gray-300 border-1 rounded-lg"
+          className="border-gray-300 form-input border-1 rounded-lg"
         />
 
-        <select name="property_type" value={form.property_type} onChange={handleChange}>
+        <select name="property_type" className="form-input" value={form.property_type} onChange={handleChange}>
           <option value="residential">Residential</option>
           <option value="commercial">Commercial</option>
           <option value="apartment">Apartment</option>
           <option value="villa">Villa</option>
         </select>
 
-        <select name="listing_type" value={form.listing_type} onChange={handleChange}>
+        <select name="listing_type" className="form-input" value={form.listing_type} onChange={handleChange}>
           <option value="sale">For Sale</option>
           <option value="rent">For Rent</option>
           <option value="both">Sale & Rent</option>
@@ -313,6 +315,7 @@ export default function CreateProperty() {
           value={form.price}
           onChange={handleChange} 
           min="1"
+          className="form-input"
         />
         
         <input 
@@ -322,6 +325,7 @@ export default function CreateProperty() {
           value={form.rent_price}
           onChange={handleChange} 
           min="0"
+          className="form-input"
         />
 
         <input 
@@ -329,6 +333,7 @@ export default function CreateProperty() {
           placeholder="Location *" 
           required 
           value={form.location}
+          className="form-input"
           onChange={handleChange} 
         />
         
@@ -338,6 +343,7 @@ export default function CreateProperty() {
           required 
           value={form.address}
           onChange={handleChange} 
+          className="form-input"
         />
         
         <input 
@@ -346,6 +352,7 @@ export default function CreateProperty() {
           required 
           value={form.city}
           onChange={handleChange} 
+          className="form-input"
         />
         
         <input 
@@ -354,6 +361,7 @@ export default function CreateProperty() {
           required 
           value={form.state}
           onChange={handleChange} 
+          className="form-input"
         />
         
         <input 
@@ -362,6 +370,7 @@ export default function CreateProperty() {
           required 
           value={form.pincode}
           onChange={handleChange} 
+          className="form-input"
         />
 
         <input 
@@ -372,6 +381,7 @@ export default function CreateProperty() {
           value={form.area_sqft}
           onChange={handleChange} 
           min="1"
+          className="form-input"
         />
         
         <input 
@@ -381,6 +391,7 @@ export default function CreateProperty() {
           value={form.bedrooms}
           onChange={handleChange} 
           min="0"
+          className="form-input"
         />
         
         <input 
@@ -390,13 +401,14 @@ export default function CreateProperty() {
           value={form.bathrooms}
           onChange={handleChange} 
           min="0"
+          className="form-input"
         />
 
         {/* 🔥 IMAGE UPLOAD SECTION */}
         <div className="image-upload-section">
           <h4>Property Images</h4>
           
-          <div className="ratio-info">
+          <div className="ratio-info text-black">
             <strong>Recommended ratio:</strong> 4:3 (e.g., 1200×900, 1600×1200)
             <div className="ratio-toggle">
               <label>
@@ -417,7 +429,7 @@ export default function CreateProperty() {
             multiple 
             accept="image/*" 
             onChange={handleImagesChange}
-            className="file-input"
+            className="file-input form-input"
           />
           
           {images.length > 0 && (
@@ -497,6 +509,7 @@ export default function CreateProperty() {
           required 
           value={form.contact_name}
           onChange={handleChange} 
+          className="form-input"
         />
         
         <input 
@@ -505,6 +518,7 @@ export default function CreateProperty() {
           required 
           value={form.contact_phone}
           onChange={handleChange} 
+          className="form-input"
         />
         
         <input 
@@ -514,6 +528,7 @@ export default function CreateProperty() {
           required 
           value={form.contact_email}
           onChange={handleChange} 
+          className="form-input"
         />
 
         <button type="submit" disabled={loading}>

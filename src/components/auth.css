@@ -73,13 +73,24 @@
   box-sizing: border-box;
 }
 
+.auth-page {
+          position: fixed;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f7f7f7;
+          z-index: 1;
+          width: 100%;
+          min-height: 100vh;
+        }
 /* === AUTH CONTAINER === */
 .auth-container {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
   padding: var(--spacing-xl);
-  background: var(--bg-primary);
+  background: #fff;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xl);
   animation: slideUp 0.4s ease-out;
@@ -115,7 +126,7 @@
 
 .auth-subtitle {
   font-size: 1rem;
-  color: var(--text-secondary);
+  color: #555;
   font-weight: 400;
 }
 
@@ -143,7 +154,7 @@
 .form-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #555;
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -159,9 +170,9 @@
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  color: var(--text-primary);
-  background: var(--bg-secondary);
-  border: 2px solid var(--border-color);
+  color: #555;
+  background: #fff;
+  border: 2px solid #555;
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   font-family: inherit;
@@ -173,10 +184,10 @@
 }
 
 .form-input:focus {
-  background: var(--bg-primary);
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--border-focus);
-  transform: translateY(-1px);
+  background: #fff;
+  /* border-color: #555; */
+  /* box-shadow: 0 0 0 3px var(--border-focus); */
+  /* transform: translateY(-1px); */
 }
 
 .form-input:disabled {
@@ -197,7 +208,7 @@
 
 .form-input-success {
   border-color: var(--success-color);
-  background: rgba(16, 185, 129, 0.05);
+  background: #555;
 }
 
 .form-input-success:focus {
@@ -208,7 +219,7 @@
 /* === FORM HELP TEXT === */
 .form-help {
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: #555555c0;
   margin-top: -0.25rem;
 }
 
@@ -344,7 +355,7 @@
   padding-top: var(--spacing-xl);
   border-top: 1px solid var(--border-color);
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: #555;
 }
 
 .auth-switch a {

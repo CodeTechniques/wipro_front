@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { apiFetch } from "../api/api"; // your existing helper
+import '../components/PropertyRequestForm.css' 
 
 
 export default function PropertyRequestForm() {

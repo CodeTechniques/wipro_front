@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 // Get environment variables
 // const API_BASE_URL = "http://127.0.0.1:8000/api";
 const API_BASE_URL = "https://backend.wipogroup.in/api";
@@ -201,6 +203,16 @@ export const authAPI = {
       const data = await response.json();
 
       if (!response.ok) {
+        console.log(data)
+        if(data.username){
+          toast.error(data?.username || 'Registration failed')
+          throw new Error(data?.username || 'Registration failed');
+        }
+        if(data.email){
+          toast.error('Email Already Register' || data?.email || 'Registration failed')
+          throw new Error('Email Already Register');
+        }
+        toast.error(data?.detail || 'Registration failed')
         throw new Error(data?.detail || 'Registration failed');
       }
 

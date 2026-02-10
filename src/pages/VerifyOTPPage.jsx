@@ -109,7 +109,7 @@ const VerifyOTPPage = () => {
       }
     } catch (error) {
       console.error('Verify OTP error:', error);
-      toast.error(error?.detail || 'Network error. Please try again.');
+      toast.error(error?.error || 'Network error. Please try again.');
     } finally {
       setLoading(false);
     }

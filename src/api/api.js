@@ -17,7 +17,6 @@ const processQueue = (error, token = null) => {
 export const apiFetch = async (endpoint, options = {}) => {
   const accessToken = localStorage.getItem("access_token");
   const isFormData = options.body instanceof FormData;
-  console.log(isFormData,"1",accessToken)
   const makeRequest = (token) => {
     const headers = {
       ...(isFormData ? {} : { "Content-Type": "application/json" }),

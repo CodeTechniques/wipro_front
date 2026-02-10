@@ -199,6 +199,7 @@ export default function KYC() {
 
       // Add referral code if exists
       const referralCode = localStorage.getItem("referral_code");
+      console.log(referralCode)
       if (referralCode) {
         data.append("referral_code", referralCode);
       }
@@ -209,7 +210,7 @@ export default function KYC() {
         body: data,
       });
 
-      localStorage.removeItem("referral_code");
+      // localStorage.removeItem("referral_code");
       setStatus("pending");
       toast.success("KYC submitted successfully! Verification in progress.");
     } catch (error) {

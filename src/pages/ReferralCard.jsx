@@ -22,6 +22,7 @@ export default function ReferralCard() {
     setLoading(true);
     try {
       const res = await apiFetch(`/auth/referral-leaderboard/?period=${p}`);
+      console.log(res)
       setData(res);
     } catch (e) {
       console.error(e);
@@ -32,6 +33,7 @@ export default function ReferralCard() {
 
   useEffect(() => {
     apiFetch("/auth/my-referral/").then((res) => {
+      console.log(res)
       const link = `${window.location.origin}/register?ref=${res.referral_code}`;
       setReferralLink(link);
     });

@@ -53,6 +53,7 @@ import Contact from "./pages/contactUs";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import VerifyOTPPage from "./pages/VerifyOTPPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import InvestmentsPage from "./pages/InvestmentsPage";
 
 
 
@@ -98,6 +99,15 @@ export const router = createBrowserRouter([
     element: (
       
         <CommitteeList />
+      
+    ),
+  },
+
+   {
+    path: "/investment",
+    element: (
+      
+        <InvestmentsPage />
       
     ),
   },

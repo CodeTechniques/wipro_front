@@ -67,49 +67,60 @@ export default function KYC() {
   };
 
   const handleFileChange = (name, file) => {
-    if (!file) return;
-    
-    // Validate file type
-    if (!file.type.startsWith('image/') && !file.type.includes('pdf')) {
-      toast.error('Please upload only images (JPG, PNG) or PDF files');
+  if (!file) return;
+
+  // allow only images & pdf
+  if (!file.type.startsWith("image/") && !file.type.includes("pdf")) {
+    toast.error("Only JPG, PNG or PDF allowed");
+    return;
+  }
+
+  // 🔴 IMAGE SIZE VALIDATION (500KB)
+  if (file.type.startsWith("image/")) {
+    const maxSize = 500 * 1024; // 500KB
+
+    if (file.size > maxSize) {
+      toast.error("Image must be less than 500KB");
       return;
     }
+  }
 
-    // Validate file size (10MB limit)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('File size should be less than 10MB');
+  // optional: PDF limit (2MB example)
+  if (file.type.includes("pdf")) {
+    const pdfLimit = 2 * 1024 * 1024;
+
+    if (file.size > pdfLimit) {
+      toast.error("PDF must be less than 2MB");
       return;
     }
+  }
 
-    // Create preview for images
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFilePreviews(prev => ({
-          ...prev,
-          [name]: reader.result
-        }));
-      };
-      reader.readAsDataURL(file);
-    } else {
-      // For PDF files, clear any image preview
+  // preview image
+  if (file.type.startsWith("image/")) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
       setFilePreviews(prev => ({
         ...prev,
-        [name]: null
+        [name]: reader.result
       }));
-    }
-
-    // Update form with file
-    setForm(prev => ({
+    };
+    reader.readAsDataURL(file);
+  } else {
+    setFilePreviews(prev => ({
       ...prev,
-      [name]: file
+      [name]: null
     }));
-    
-    // Clear error for this field
-    setErrors(prev => ({ ...prev, [name]: "" }));
-    
-    toast.success(`${file.name} selected`);
-  };
+  }
+
+  setForm(prev => ({
+    ...prev,
+    [name]: file
+  }));
+
+  setErrors(prev => ({ ...prev, [name]: "" }));
+  toast.success(`${file.name} selected`);
+};
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -1842,7 +1853,7 @@ function FileUpload({ name, label, error, preview, fileName, onChange, onRemove 
           <Upload size={32} weight="duotone" />
         </div>
         <p className="upload-text">Click to upload</p>
-        <p className="upload-subtext">JPG, PNG or PDF (Max 10MB)</p>
+        <p className="upload-subtext">JPG, PNG or PDF (Max 500KB)</p>
       </label>
       
       {error && <div className="error-text">{error}</div>}

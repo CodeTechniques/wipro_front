@@ -21,6 +21,15 @@ export default function CommitteeDetail() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [processingPayment, setProcessingPayment] = useState(false);
 
+  // Due payment states
+  const [duePayments, setDuePayments] = useState([]);
+  const [nextDue, setNextDue] = useState(null);
+  const [showDueModal, setShowDueModal] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [calculatedAmount, setCalculatedAmount] = useState(0);
+  const [totalDueAmount, setTotalDueAmount] = useState(0);
+
   const { currency } = useCurrency(); // ✅ GLOBAL CURRENCY
 
   /* 🔹 Committee details */
@@ -58,6 +67,76 @@ export default function CommitteeDetail() {
       .then(setCommitteeDues)
       .catch(console.error);
   }, []);
+
+  /* 🔹 Check due payments */
+  const checkDuePayments = async () => {
+    try {
+      const res = await apiFetch("/my-due-payments/");
+
+      if (res.has_due) {
+        setDuePayments(res.dues);
+        setTotalDueAmount(res.dues.reduce((sum, due) => sum + due.amount, 0));
+        setShowDueModal(true);
+      } else if (res.next_due && res.next_due.length > 0) {
+        // Find next due for this committee
+        const committeeNextDue = res.next_due.find(
+          due => due.user_committee_id === parseInt(userCommitteeId)
+        );
+        
+        if (committeeNextDue) {
+          setNextDue(committeeNextDue);
+          // Set from date to next_due_at
+          const nextDueDate = new Date(committeeNextDue.next_due_at);
+          setFromDate(formatDateForInput(nextDueDate));
+          
+          // Set to date to next_due_at + interval (default to 30 days)
+          const defaultToDate = new Date(nextDueDate);
+          defaultToDate.setDate(defaultToDate.getDate() + 30);
+          setToDate(formatDateForInput(defaultToDate));
+          
+          setShowDueModal(true);
+        } else {
+          // If no due for this committee, open invest modal
+          handleInvestMore();
+        }
+      } else {
+        // No dues at all, open invest modal
+        handleInvestMore();
+      }
+    } catch (err) {
+      console.log(err);
+      handleInvestMore();
+    }
+  };
+
+  const formatDateForInput = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const calculateAmount = () => {
+    if (!fromDate || !toDate || !selectedPlan) return 0;
+
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+    
+    if (to < from) return 0;
+
+    const diffDays = Math.ceil((to - from) / (1000 * 60 * 60 * 24));
+    const intervalDays = selectedPlan.interval_days;
+    const amountPerPayment = selectedPlan.amount;
+
+    const paymentsCount = Math.floor(diffDays / intervalDays) + 1;
+    return paymentsCount * amountPerPayment;
+  };
+
+  useEffect(() => {
+    if (showDueModal && selectedPlan) {
+      setCalculatedAmount(calculateAmount());
+    }
+  }, [fromDate, toDate, selectedPlan, showDueModal]);
 
   const handleCommitteeDuePayNow = async (d) => {
     // 🔥 create per-user due if not exists
@@ -107,9 +186,61 @@ export default function CommitteeDetail() {
     }
   };
 
+  const handleRangePayment = async () => {
+    if (!fromDate || !toDate || !selectedPlan) {
+      alert("Please select both dates");
+      return;
+    }
+
+    setProcessingPayment(true);
+
+    try {
+      const response = await apiFetch(`/pay-due-range/${userCommitteeId}/`, {
+        method: "POST",
+        body: JSON.stringify({
+          from_date: fromDate,
+          to_date: toDate
+        })
+      });
+
+      // If successful
+      setShowDueModal(false);
+      alert(`Payment successful! You've paid for ${response.payments_paid} installments.`);
+      
+      // Refresh data
+      window.location.reload();
+      
+    } catch (error) {
+      console.log("Payment error:", error);
+      
+      // Check if error is due to insufficient balance
+      if (error.error === "Insufficient wallet balance") {
+        setShowDueModal(false);
+        
+        // Navigate to add funds page
+        navigate(`/pay/${userCommitteeId}`);
+        
+        alert(`Insufficient balance. Required: ${formatPrice(error.required, currency)}, Available: ${formatPrice(error.available, currency)}`);
+      } else if (error.error === "from_date must equal next_payment_due") {
+        alert(`From date must be ${error.next_due}`);
+        
+        // Update from date to next due
+        setFromDate(error.next_due);
+      } else {
+        alert(error.error || "Payment failed. Please try again.");
+      }
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
+
   const handleOpenPaymentModal = (plan) => {
     setSelectedPlan(plan);
     setShowPaymentModal(true);
+  };
+
+  const handleInvestMore = () => {
+    navigate(`/pay/${userCommitteeId}`);
   };
 
   const dismissDue = async (id) => {
@@ -139,7 +270,7 @@ export default function CommitteeDetail() {
     apiFetch(`/payment-history/${userCommitteeId}/`)
       .then((res) => {
         if (res.length > 0) {
-          setPaymentStatus(res[0].status); // latest payment
+          setPaymentStatus(null); // latest payment
         }
       })
       .catch(console.error);
@@ -280,12 +411,9 @@ export default function CommitteeDetail() {
         </div>
 
         <div style={{ display: "flex", gap: 12 }}>
-          {/* 💰 INVEST */}
+          {/* 💰 CHECK DUES / INVEST */}
           <button
-            onClick={() => {
-              // 👉 Use first plan as default invest plan
-              navigate(`/pay/${userCommitteeId}`);
-            }}
+            onClick={checkDuePayments}
             style={{
               padding: "10px 18px",
               background: "#16a34a",
@@ -296,7 +424,7 @@ export default function CommitteeDetail() {
               fontWeight: 600,
             }}
           >
-            💰 Invest Now
+            💰 Check Dues & Invest
           </button>
 
           {/* ⬇ WITHDRAW */}
@@ -542,6 +670,170 @@ export default function CommitteeDetail() {
                 ) : (
                   <>
                     Confirm Payment <i className="bi bi-arrow-right"></i>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DUE PAYMENT MODAL */}
+      {showDueModal && (
+        <div className="payment-modal-overlay">
+          <div className="payment-modal" style={{ maxWidth: 500 }}>
+            <div className="payment-modal-header">
+              <h3>{duePayments.length > 0 ? "Due Payments" : "Invest More"}</h3>
+              <button 
+                className="payment-modal-close"
+                onClick={() => setShowDueModal(false)}
+                disabled={processingPayment}
+              >
+                <i className="bi bi-x-lg"></i>
+              </button>
+            </div>
+
+            <div className="payment-modal-content">
+              {duePayments.length > 0 ? (
+                <>
+                  <p style={{ color: "#ea580c", fontWeight: 600, marginBottom: 16 }}>
+                    You have {duePayments.length} due payment(s) totaling {formatPrice(totalDueAmount, currency)}
+                  </p>
+                  
+                  <div style={{ maxHeight: 200, overflowY: "auto", marginBottom: 20 }}>
+                    {duePayments.map((due, index) => (
+                      <div key={index} style={{
+                        padding: 12,
+                        background: "#fff7ed",
+                        borderRadius: 8,
+                        marginBottom: 8,
+                        border: "1px solid #fb923c"
+                      }}>
+                        <p style={{ margin: 0 }}>
+                          <b>{due.committee_name}</b> - {formatPrice(due.amount, currency)}
+                        </p>
+                        <small style={{ color: "#6b7280" }}>
+                          Due: {new Date(due.due_at).toLocaleDateString()} ({due.plan_type})
+                        </small>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : nextDue && (
+                <p style={{ marginBottom: 16 }}>
+                  Next payment due on <b>{new Date(nextDue.next_due_at).toLocaleDateString()}</b>
+                </p>
+              )}
+
+              {/* Plan Selection */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", marginBottom: 8, fontWeight: 500 }}>
+                  Select Plan
+                </label>
+                <select
+                  value={selectedPlan?.id || ""}
+                  onChange={(e) => {
+                    const plan = plans.find(p => p.id === parseInt(e.target.value));
+                    setSelectedPlan(plan);
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: 10,
+                    borderRadius: 6,
+                    border: "1px solid #e5e7eb"
+                  }}
+                >
+                  <option value="">Select a plan</option>
+                  {plans.map(plan => (
+                    <option key={plan.id} value={plan.id}>
+                      {plan.name} - {formatPrice(plan.amount, currency)} ({plan.type})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {selectedPlan && (
+                <>
+                  {/* Date Selection */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
+                    <div>
+                      <label style={{ display: "block", marginBottom: 4, fontSize: 13, color: "#6b7280" }}>
+                        From Date
+                      </label>
+                      <input
+                        type="date"
+                        value={fromDate}
+                        onChange={(e) => setFromDate(e.target.value)}
+                        min={fromDate}
+                        style={{
+                          width: "100%",
+                          padding: 8,
+                          borderRadius: 6,
+                          border: "1px solid #e5e7eb"
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: "block", marginBottom: 4, fontSize: 13, color: "#6b7280" }}>
+                        To Date
+                      </label>
+                      <input
+                        type="date"
+                        value={toDate}
+                        onChange={(e) => setToDate(e.target.value)}
+                        min={fromDate}
+                        style={{
+                          width: "100%",
+                          padding: 8,
+                          borderRadius: 6,
+                          border: "1px solid #e5e7eb"
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Calculated Amount */}
+                  {calculatedAmount > 0 && (
+                    <div style={{
+                      padding: 16,
+                      background: "#f0fdf4",
+                      borderRadius: 8,
+                      border: "1px solid #86efac",
+                      marginBottom: 16,
+                      textAlign: "center"
+                    }}>
+                      <p style={{ margin: 0, color: "#166534", fontWeight: 600 }}>
+                        Total Amount: {formatPrice(calculatedAmount, currency)}
+                      </p>
+                      <p style={{ margin: "4px 0 0", fontSize: 13, color: "#6b7280" }}>
+                        {Math.ceil((new Date(toDate) - new Date(fromDate)) / (1000 * 60 * 60 * 24) / selectedPlan.interval_days) + 1} installments
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div className="payment-modal-footer">
+              <button
+                className="payment-cancel-btn"
+                onClick={() => setShowDueModal(false)}
+                disabled={processingPayment}
+              >
+                Cancel
+              </button>
+              <button
+                className="payment-confirm-btn"
+                onClick={handleRangePayment}
+                disabled={processingPayment || !selectedPlan || !fromDate || !toDate || calculatedAmount === 0}
+              >
+                {processingPayment ? (
+                  <>
+                    <i className="bi bi-hourglass-split"></i> Processing...
+                  </>
+                ) : (
+                  <>
+                    Pay {calculatedAmount > 0 ? formatPrice(calculatedAmount, currency) : ""} <i className="bi bi-arrow-right"></i>
                   </>
                 )}
               </button>

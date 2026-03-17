@@ -21,7 +21,7 @@ export default function Navbar() {
     if (isLoggedIn) {
       apiFetch("/auth/profile-details/")
         .then(setProfile)
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [isLoggedIn]);
 
@@ -79,7 +79,7 @@ export default function Navbar() {
 
   const handlePayNow = async (userCommitteeId) => {
     setProcessingPayment(true);
-    
+
     try {
       // First attempt to pay using wallet
       const response = await apiFetch(`/pay-due/${userCommitteeId}/`, {
@@ -89,24 +89,24 @@ export default function Navbar() {
       // If successful, close popup and show success message
       setShowDuePopup(false);
       alert("Payment successful! Your dues have been cleared.");
-      
+
     } catch (error) {
       console.log("Payment error:", error);
-      
+
       // Check if error is due to insufficient balance
-      if (error.error === "Insufficient wallet balance" || 
-          error?.detail === "Insufficient wallet balance" ||
-          error?.message === "Insufficient wallet balance") {
-        
+      if (error.error === "Insufficient wallet balance" ||
+        error?.detail === "Insufficient wallet balance" ||
+        error?.message === "Insufficient wallet balance") {
+
         // Close the due popup
         setShowDuePopup(false);
-        
+
         // Navigate to payment page with due payment info
-        navigate("/pay", { 
-          state: { 
+        navigate("/pay", {
+          state: {
             duePayment: duePayments.find(d => d.user_committee_id === userCommitteeId),
             fromDuePopup: true
-          } 
+          }
         });
       } else {
         // Handle other errors
@@ -115,6 +115,30 @@ export default function Navbar() {
     } finally {
       setProcessingPayment(false);
     }
+  };
+  const calculateDueCount = (dueDate, planType) => {
+    const due = new Date(dueDate);
+    const now = new Date();
+
+    const diffMs = now - due;
+
+    if (diffMs <= 0) return 1;
+
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (planType === "daily") {
+      return diffDays + 1;
+    }
+
+    if (planType === "monthly") {
+      return Math.floor(diffDays / 30) + 1;
+    }
+
+    if (planType === "yearly") {
+      return Math.floor(diffDays / 365) + 1;
+    }
+
+    return 1;
   };
 
   return (
@@ -160,9 +184,8 @@ export default function Navbar() {
                   </div>
 
                   <i
-                    className={`bi bi-chevron-down dropdown-arrow ${
-                      dropdownOpen ? "open" : ""
-                    }`}
+                    className={`bi bi-chevron-down dropdown-arrow ${dropdownOpen ? "open" : ""
+                      }`}
                   ></i>
                 </div>
 
@@ -230,59 +253,75 @@ export default function Navbar() {
           <div className="due-popup">
             <div className="due-popup-header">
               <h3>
-                <i className="bi bi-exclamation-triangle-fill"></i> 
+                <i className="bi bi-exclamation-triangle-fill"></i>
                 Payment Due
               </h3>
-              <button 
-                className="due-popup-close" 
+              <button
+                className="due-popup-close"
                 onClick={() => setShowDuePopup(false)}
                 disabled={processingPayment}
               >
                 <i className="bi bi-x-lg"></i>
               </button>
             </div>
-            
+
             <div className="due-popup-content">
               <p className="due-popup-message">
-                You have {duePayments.length} pending payment{duePayments.length > 1 ? 's' : ''}
+                You have pending payments
               </p>
 
-              {duePayments.map((d, index) => (
-                <div key={d.user_committee_id || index} className="due-item">
-                  <div className="due-item-details">
-                    <h4>{d.committee_name}</h4>
-                    <div className="due-item-row">
-                      <span>Amount:</span>
-                      <strong>₹{d.amount}</strong>
+              {duePayments.map((d, index) => {
+
+                const dueCount = calculateDueCount(d.due_at, d.plan_type);
+
+                return (
+
+                  <div key={d.user_committee_id || index} className="due-item">
+                    <div className="due-item-details">
+                      <h4>{d.committee_name}</h4>
+                      <div className="due-item-row">
+                        <span>Amount:</span>
+                        <strong>₹{d.amount}</strong>
+                      </div>
+                      <div className="due-item-row">
+                        <span>Type:</span>
+                        <span className="due-plan-type">{d.plan_type}</span>
+                      </div>
+                      <div className="due-item-row">
+                        <span>Missed Payments:</span>
+                        <strong>{dueCount}</strong>
+                      </div>
+
+                      <div className="due-item-row">
+                        <span>First Due Date:</span>
+                        <strong>{d.due_at}</strong>
+                      </div>
                     </div>
-                    <div className="due-item-row">
-                      <span>Type:</span>
-                      <span className="due-plan-type">{d.plan_type}</span>
-                    </div>
+
+                    <button
+                      className="due-pay-btn"
+                      onClick={() => handlePayNow(d.user_committee_id)}
+                      disabled={processingPayment}
+                    >
+                      {processingPayment ? (
+                        <>
+                          <i className="bi bi-hourglass-split"></i> Processing...
+                        </>
+                      ) : (
+                        <>
+                          Pay Now <i className="bi bi-arrow-right"></i>
+                        </>
+                      )}
+                    </button>
                   </div>
-                  
-                  <button
-                    className="due-pay-btn"
-                    onClick={() => handlePayNow(d.user_committee_id)}
-                    disabled={processingPayment}
-                  >
-                    {processingPayment ? (
-                      <>
-                        <i className="bi bi-hourglass-split"></i> Processing...
-                      </>
-                    ) : (
-                      <>
-                        Pay Now <i className="bi bi-arrow-right"></i>
-                      </>
-                    )}
-                  </button>
-                </div>
-              ))}
+                )
+              }
+              )}
             </div>
 
             <div className="due-popup-footer">
-              <button 
-                className="due-later-btn" 
+              <button
+                className="due-later-btn"
                 onClick={() => setShowDuePopup(false)}
                 disabled={processingPayment}
               >

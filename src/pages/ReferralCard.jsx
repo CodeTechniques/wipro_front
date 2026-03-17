@@ -179,14 +179,14 @@ export default function ReferralCard() {
                 <div className={`rank rank-${item.rank}`}>{item.rank}</div>
 
                 <div className="leaderboard-user">
-                  <div className="username">{item.name}</div>
+                  <div className="username">{item.user}</div>
                   <div className="referrals">
-                    {item.referrals} referrals
+                    {item.total_referrals} referrals
                   </div>
                 </div>
 
                 <div className="leaderboard-amount">
-                  {formatPrice(item.amount, currency)}
+                  {formatPrice(item.total_earnings, currency)}
                 </div>
               </div>
             ))}
